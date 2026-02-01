@@ -42,12 +42,67 @@
         
         .admin-container {
             display: flex;
-            flex-direction: column;
             min-height: 100vh;
-            padding-bottom: 70px; /* مساحة للقائمة السفلية */
         }
         
-        /* إزالة القائمة الجانبية وإضافة القائمة السفلية */
+        /* القائمة الجانبية للكمبيوتر */
+        .sidebar {
+            width: 250px;
+            background: var(--sidebar-bg);
+            position: fixed;
+            top: 0;
+            right: 0;
+            bottom: 0;
+            display: none;
+            flex-direction: column;
+            z-index: 1000;
+            transition: all 0.3s ease;
+        }
+        
+        .sidebar-header {
+            padding: 20px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            text-align: center;
+        }
+        
+        .sidebar-header h2 {
+            color: white;
+            font-size: 18px;
+            font-weight: 600;
+        }
+        
+        .sidebar-nav {
+            padding: 20px 0;
+            flex: 1;
+        }
+        
+        .nav-item {
+            display: flex;
+            align-items: center;
+            color: rgba(255, 255, 255, 0.8);
+            text-decoration: none;
+            padding: 15px 20px;
+            font-size: 14px;
+            border-right: 3px solid transparent;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        
+        .nav-item i {
+            margin-left: 15px;
+            font-size: 16px;
+            width: 20px;
+            text-align: center;
+        }
+        
+        .nav-item:hover,
+        .nav-item.active {
+            color: white;
+            background: rgba(255, 255, 255, 0.05);
+            border-right-color: var(--primary);
+        }
+        
+        /* القائمة السفلية للهواتف */
         .bottom-nav {
             position: fixed;
             bottom: 0;
@@ -87,41 +142,26 @@
             background: rgba(255, 255, 255, 0.05);
         }
         
+        /* إظهار القائمة الجانبية في الكمبيوتر وإخفاء السفلية */
         @media (min-width: 768px) {
+            .sidebar {
+                display: flex;
+            }
+            
             .bottom-nav {
-                position: static;
-                flex-direction: column;
-                width: 250px;
-                height: 100vh;
-                justify-content: flex-start;
-                padding: 20px 0;
-                box-shadow: none;
-            }
-            
-            .bottom-nav-item {
-                flex-direction: row;
-                justify-content: flex-start;
-                padding: 15px 20px;
-                font-size: 14px;
-                max-width: none;
-                border-right: 3px solid transparent;
-            }
-            
-            .bottom-nav-item i {
-                margin-bottom: 0;
-                margin-left: 15px;
-                font-size: 16px;
-                width: 20px;
-                text-align: center;
-            }
-            
-            .bottom-nav-item.active {
-                border-right-color: var(--primary);
+                display: none;
             }
             
             .admin-container {
-                flex-direction: row;
-                padding-bottom: 0;
+                padding-right: 250px;
+            }
+        }
+        
+        @media (min-width: 1200px) {
+            .admin-container {
+                max-width: 1600px;
+                margin: 0 auto;
+                padding-right: 250px;
             }
         }
         
@@ -130,12 +170,18 @@
             flex: 1;
             padding: 20px;
             width: 100%;
+            padding-bottom: 70px; /* مساحة للقائمة السفلية في الهواتف */
         }
         
         @media (min-width: 768px) {
             .main-content {
-                margin-right: 250px;
-                padding-right: 20px;
+                padding-bottom: 20px;
+            }
+        }
+        
+        @media (min-width: 1200px) {
+            .main-content {
+                padding: 30px;
             }
         }
         
@@ -167,6 +213,12 @@
             }
         }
         
+        @media (min-width: 768px) {
+            .top-bar {
+                padding: 18px 25px;
+            }
+        }
+        
         .top-bar-left {
             display: flex;
             align-items: center;
@@ -188,7 +240,13 @@
             }
         }
         
-        /* بقية الأنماط تبقى كما هي مع تعديلات بسيطة */
+        @media (min-width: 1200px) {
+            .page-title {
+                font-size: 24px;
+            }
+        }
+        
+        /* Stats Grid */
         .stats-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
@@ -200,6 +258,20 @@
             .stats-grid {
                 grid-template-columns: 1fr;
                 gap: 10px;
+            }
+        }
+        
+        @media (min-width: 768px) {
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 20px;
+            }
+        }
+        
+        @media (min-width: 1200px) {
+            .stats-grid {
+                grid-template-columns: repeat(3, 1fr);
+                gap: 25px;
             }
         }
         
@@ -218,6 +290,12 @@
             transform: translateY(-3px);
         }
         
+        @media (min-width: 1200px) {
+            .stat-card {
+                padding: 25px;
+            }
+        }
+        
         .stat-icon {
             width: 50px;
             height: 50px;
@@ -234,6 +312,14 @@
                 width: 45px;
                 height: 45px;
                 font-size: 18px;
+            }
+        }
+        
+        @media (min-width: 1200px) {
+            .stat-icon {
+                width: 60px;
+                height: 60px;
+                font-size: 22px;
             }
         }
         
@@ -259,6 +345,12 @@
         @media (max-width: 576px) {
             .stat-info h3 {
                 font-size: 24px;
+            }
+        }
+        
+        @media (min-width: 1200px) {
+            .stat-info h3 {
+                font-size: 32px;
             }
         }
         
@@ -297,6 +389,13 @@
             }
         }
         
+        @media (min-width: 1200px) {
+            .section-card {
+                padding: 25px;
+                margin-bottom: 25px;
+            }
+        }
+        
         .section-header {
             display: flex;
             justify-content: space-between;
@@ -314,6 +413,13 @@
             }
         }
         
+        @media (min-width: 1200px) {
+            .section-header {
+                margin-bottom: 25px;
+                padding-bottom: 20px;
+            }
+        }
+        
         .section-title {
             font-size: 18px;
             font-weight: 700;
@@ -326,6 +432,12 @@
         @media (max-width: 576px) {
             .section-title {
                 font-size: 16px;
+            }
+        }
+        
+        @media (min-width: 1200px) {
+            .section-title {
+                font-size: 20px;
             }
         }
         
@@ -348,8 +460,21 @@
             }
         }
         
+        @media (min-width: 1200px) {
+            .form-row {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 20px;
+            }
+        }
+        
         .form-group {
             margin-bottom: 15px;
+        }
+        
+        @media (min-width: 1200px) {
+            .form-group {
+                margin-bottom: 20px;
+            }
         }
         
         .form-label {
@@ -358,6 +483,12 @@
             font-weight: 600;
             color: var(--dark);
             font-size: 13px;
+        }
+        
+        @media (min-width: 1200px) {
+            .form-label {
+                font-size: 14px;
+            }
         }
         
         .form-control {
@@ -370,6 +501,13 @@
             transition: all 0.3s ease;
         }
         
+        @media (min-width: 1200px) {
+            .form-control {
+                padding: 12px 15px;
+                font-size: 14px;
+            }
+        }
+        
         .form-control:focus {
             outline: none;
             border-color: var(--primary);
@@ -380,6 +518,12 @@
             font-size: 11px;
             color: var(--gray);
             margin-top: 5px;
+        }
+        
+        @media (min-width: 1200px) {
+            .form-help {
+                font-size: 12px;
+            }
         }
         
         /* Buttons */
@@ -404,6 +548,13 @@
             }
         }
         
+        @media (min-width: 1200px) {
+            .btn {
+                padding: 12px 24px;
+                font-size: 14px;
+            }
+        }
+        
         .btn-primary {
             background: var(--primary);
             color: white;
@@ -425,16 +576,6 @@
             transform: translateY(-2px);
         }
         
-        .btn-danger {
-            background: var(--danger);
-            color: white;
-        }
-        
-        .btn-danger:hover {
-            background: #dc2626;
-            transform: translateY(-2px);
-        }
-        
         .btn-warning {
             background: var(--warning);
             color: white;
@@ -442,6 +583,16 @@
         
         .btn-warning:hover {
             background: #d97706;
+            transform: translateY(-2px);
+        }
+        
+        .btn-danger {
+            background: var(--danger);
+            color: white;
+        }
+        
+        .btn-danger:hover {
+            background: #dc2626;
             transform: translateY(-2px);
         }
         
@@ -457,16 +608,31 @@
             }
         }
         
-        /* Items Table */
+        @media (min-width: 1200px) {
+            .btn-sm {
+                padding: 8px 16px;
+                font-size: 13px;
+            }
+        }
+        
+        /* Items Table - تحسينات للجداول */
         .table-responsive {
             overflow-x: auto;
             margin-top: 15px;
+            border-radius: 8px;
+            border: 1px solid var(--border);
         }
         
         .items-table {
             width: 100%;
             border-collapse: collapse;
             min-width: 600px;
+        }
+        
+        @media (min-width: 1200px) {
+            .items-table {
+                min-width: 800px;
+            }
         }
         
         .items-table th {
@@ -477,6 +643,14 @@
             color: var(--dark);
             border-bottom: 1px solid var(--border);
             font-size: 13px;
+            white-space: nowrap;
+        }
+        
+        @media (min-width: 1200px) {
+            .items-table th {
+                padding: 15px 20px;
+                font-size: 14px;
+            }
         }
         
         .items-table td {
@@ -493,6 +667,17 @@
             }
         }
         
+        @media (min-width: 1200px) {
+            .items-table td {
+                padding: 15px 20px;
+                font-size: 14px;
+            }
+        }
+        
+        .items-table tr:last-child td {
+            border-bottom: none;
+        }
+        
         .items-table tr:hover {
             background: #f8fafc;
         }
@@ -502,13 +687,20 @@
             height: 50px;
             border-radius: 6px;
             object-fit: cover;
-            border: 2px solid var(--border);
+            border: 1px solid var(--border);
         }
         
         @media (max-width: 576px) {
             .item-image {
                 width: 40px;
                 height: 40px;
+            }
+        }
+        
+        @media (min-width: 1200px) {
+            .item-image {
+                width: 60px;
+                height: 60px;
             }
         }
         
@@ -521,7 +713,7 @@
             align-items: center;
             justify-content: center;
             color: var(--gray);
-            border: 2px dashed var(--border);
+            border: 1px dashed var(--border);
             font-size: 14px;
         }
         
@@ -533,11 +725,20 @@
             }
         }
         
+        @media (min-width: 1200px) {
+            .no-image {
+                width: 60px;
+                height: 60px;
+                font-size: 16px;
+            }
+        }
+        
         .item-name {
             font-weight: 600;
             color: var(--dark);
-            margin-bottom: 5px;
+            margin-bottom: 3px;
             font-size: 14px;
+            line-height: 1.4;
         }
         
         @media (max-width: 576px) {
@@ -546,10 +747,25 @@
             }
         }
         
+        @media (min-width: 1200px) {
+            .item-name {
+                font-size: 15px;
+            }
+        }
+        
         .item-url {
             font-size: 11px;
             color: var(--gray);
             word-break: break-all;
+            line-height: 1.4;
+            max-width: 300px;
+        }
+        
+        @media (min-width: 1200px) {
+            .item-url {
+                font-size: 12px;
+                max-width: 400px;
+            }
         }
         
         .actions {
@@ -561,6 +777,12 @@
         @media (max-width: 576px) {
             .actions {
                 gap: 5px;
+            }
+        }
+        
+        @media (min-width: 1200px) {
+            .actions {
+                gap: 10px;
             }
         }
         
@@ -596,16 +818,34 @@
             align-items: center;
         }
         
+        @media (min-width: 1200px) {
+            .episode-item {
+                padding: 15px;
+            }
+        }
+        
         .episode-info h4 {
             font-weight: 600;
             margin-bottom: 5px;
             font-size: 13px;
         }
         
+        @media (min-width: 1200px) {
+            .episode-info h4 {
+                font-size: 14px;
+            }
+        }
+        
         .episode-info p {
             font-size: 11px;
             color: var(--gray);
             word-break: break-all;
+        }
+        
+        @media (min-width: 1200px) {
+            .episode-info p {
+                font-size: 12px;
+            }
         }
         
         /* Alerts */
@@ -618,6 +858,13 @@
             gap: 10px;
             animation: slideDown 0.3s ease;
             font-size: 13px;
+        }
+        
+        @media (min-width: 1200px) {
+            .alert {
+                padding: 15px 20px;
+                font-size: 14px;
+            }
         }
         
         .alert-success {
@@ -689,7 +936,7 @@
             color: #cbd5e1;
         }
         
-        /* Modal Styles for Mobile */
+        /* Modal Styles */
         .modal-overlay {
             position: fixed;
             top: 0;
@@ -724,6 +971,12 @@
             animation: slideIn 0.3s ease;
         }
         
+        @media (min-width: 768px) {
+            .modal {
+                max-width: 600px;
+            }
+        }
+        
         @keyframes slideIn {
             from { transform: translateY(-20px); opacity: 0; }
             to { transform: translateY(0); opacity: 1; }
@@ -741,6 +994,12 @@
             z-index: 1;
         }
         
+        @media (min-width: 1200px) {
+            .modal-header {
+                padding: 20px 25px;
+            }
+        }
+        
         .modal-title {
             font-size: 18px;
             font-weight: 600;
@@ -753,6 +1012,12 @@
         @media (max-width: 576px) {
             .modal-title {
                 font-size: 16px;
+            }
+        }
+        
+        @media (min-width: 1200px) {
+            .modal-title {
+                font-size: 20px;
             }
         }
         
@@ -774,6 +1039,12 @@
             }
         }
         
+        @media (min-width: 1200px) {
+            .modal-body {
+                padding: 25px;
+            }
+        }
+        
         .modal-footer {
             padding: 15px 20px;
             border-top: 1px solid var(--border);
@@ -787,6 +1058,12 @@
                 padding: 12px 15px;
             }
         }
+        
+        @media (min-width: 1200px) {
+            .modal-footer {
+                padding: 20px 25px;
+            }
+        }
     </style>
 </head>
 <body>
@@ -794,6 +1071,31 @@
     <div class="loading-overlay" id="loadingOverlay">
         <div class="loading-spinner"></div>
     </div>
+    
+    <!-- Sidebar for Desktop -->
+    <aside class="sidebar">
+        <div class="sidebar-header">
+            <h2>GENRAL PRO</h2>
+        </div>
+        <nav class="sidebar-nav">
+            <div class="nav-item active" onclick="showSection('dashboard')">
+                <i class="fas fa-tachometer-alt"></i>
+                <span>لوحة التحكم</span>
+            </div>
+            <div class="nav-item" onclick="showSection('channels')">
+                <i class="fas fa-tv"></i>
+                <span>القنوات</span>
+            </div>
+            <div class="nav-item" onclick="showSection('series')">
+                <i class="fas fa-film"></i>
+                <span>المسلسلات</span>
+            </div>
+            <div class="nav-item" onclick="showSection('episodes')">
+                <i class="fas fa-play-circle"></i>
+                <span>الحلقات</span>
+            </div>
+        </nav>
+    </aside>
     
     <div class="admin-container">
         <!-- Main Content -->
@@ -884,8 +1186,8 @@
                             <thead>
                                 <tr>
                                     <th>الصورة</th>
-                                    <th>الاسم</th>
-                                    <th>الرابط</th>
+                                    <th style="min-width: 150px;">الاسم</th>
+                                    <th style="min-width: 200px;">الرابط</th>
                                     <th>الإجراءات</th>
                                 </tr>
                             </thead>
@@ -922,7 +1224,7 @@
                             <thead>
                                 <tr>
                                     <th>الصورة</th>
-                                    <th>الاسم</th>
+                                    <th style="min-width: 150px;">الاسم</th>
                                     <th>الحلقات</th>
                                     <th>الإجراءات</th>
                                 </tr>
@@ -946,21 +1248,37 @@
                     <div class="section-header">
                         <h2 class="section-title">
                             <i class="fas fa-play-circle"></i>
-                            إدارة الحلقات
+                            إدارة حلقات المسلسلات
                         </h2>
                     </div>
                     
                     <div id="episodesAlert"></div>
                     
-                    <div style="text-align: center; padding: 30px 15px; color: var(--gray);">
-                        <i class="fas fa-play-circle" style="font-size: 36px; margin-bottom: 10px; color: #cbd5e1;"></i>
-                        <p>اختر مسلسلاً من قسم المسلسلات لإدارة حلقاته</p>
+                    <div class="table-responsive">
+                        <table class="items-table">
+                            <thead>
+                                <tr>
+                                    <th>الصورة</th>
+                                    <th style="min-width: 150px;">اسم المسلسل</th>
+                                    <th>عدد الحلقات</th>
+                                    <th>الإجراءات</th>
+                                </tr>
+                            </thead>
+                            <tbody id="episodesSeriesList">
+                                <tr>
+                                    <td colspan="4" class="empty-state">
+                                        <i class="fas fa-film"></i>
+                                        <p>لا توجد مسلسلات مضافة</p>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
                     </div>
                 </div>
             </div>
         </div>
         
-        <!-- Bottom Navigation -->
+        <!-- Bottom Navigation for Mobile -->
         <nav class="bottom-nav" id="bottomNav">
             <div class="bottom-nav-item active" onclick="showSection('dashboard')">
                 <i class="fas fa-tachometer-alt"></i>
@@ -1014,7 +1332,7 @@
             });
             
             // Remove active class from all nav items
-            document.querySelectorAll('.bottom-nav-item').forEach(item => {
+            document.querySelectorAll('.nav-item, .bottom-nav-item').forEach(item => {
                 item.classList.remove('active');
             });
             
@@ -1035,9 +1353,8 @@
                 `;
                 
                 // Activate corresponding nav item
-                const navItems = document.querySelectorAll('.bottom-nav-item');
-                navItems.forEach((item, index) => {
-                    if (index === Object.keys(sectionMap).indexOf(section)) {
+                document.querySelectorAll('.nav-item, .bottom-nav-item').forEach(item => {
+                    if (item.querySelector('span')?.textContent === selected.title) {
                         item.classList.add('active');
                     }
                 });
@@ -1045,6 +1362,7 @@
                 // Load section data
                 if (section === 'channels') loadChannels();
                 if (section === 'series') loadSeries();
+                if (section === 'episodes') loadEpisodesSection();
             }
         }
 
@@ -1110,6 +1428,7 @@
             const modal = document.getElementById(id);
             if (modal) {
                 modal.classList.add('active');
+                document.body.style.overflow = 'hidden';
             }
         }
 
@@ -1117,6 +1436,7 @@
             const modal = document.getElementById(id);
             if (modal) {
                 modal.classList.remove('active');
+                document.body.style.overflow = '';
                 setTimeout(() => {
                     if (modal && modal.parentNode) {
                         modal.remove();
@@ -1158,27 +1478,42 @@
             openModal('addChannelModal');
         }
 
+        function editChannel(channelId, channelData) {
+            // تحويل البيانات مرة أخرى إذا لزم الأمر
+            const decodedData = typeof channelData === 'string' ? 
+                JSON.parse(channelData.replace(/&quot;/g, '"').replace(/&#39;/g, "'")) : 
+                channelData;
+            
+            showEditChannelModal(channelId, decodedData);
+        }
+
         function showEditChannelModal(channelId, channelData) {
-            // إصلاح: استخدام JSON.stringify بشكل صحيح
-            const safeChannelData = JSON.stringify(channelData).replace(/'/g, "&#39;");
+            // تنظيف البيانات من أي أحرف خاصة
+            const cleanName = (channelData.name || '').replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+            const cleanUrl = (channelData.url || '').replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+            const cleanImageUrl = (channelData.imageUrl || '').replace(/"/g, '&quot;').replace(/'/g, '&#39;');
             
             const content = `
                 <form id="editChannelForm">
                     <div class="form-group">
                         <label class="form-label">اسم القناة *</label>
-                        <input type="text" class="form-control" id="editChannelName" value="${channelData.name}" required>
+                        <input type="text" class="form-control" id="editChannelName" value="${cleanName}" required>
                     </div>
                     
                     <div class="form-group">
                         <label class="form-label">رابط القناة *</label>
-                        <input type="url" class="form-control" id="editChannelUrl" value="${channelData.url}" required>
+                        <input type="url" class="form-control" id="editChannelUrl" value="${cleanUrl}" required>
                     </div>
                     
                     <div class="form-group">
                         <label class="form-label">رابط الصورة</label>
-                        <input type="url" class="form-control" id="editChannelImageUrl" value="${channelData.imageUrl || ''}">
+                        <input type="url" class="form-control" id="editChannelImageUrl" value="${cleanImageUrl}">
                         <div class="image-preview" id="editChannelImagePreview">
-                            ${channelData.imageUrl ? `<img src="${channelData.imageUrl}" style="max-width: 150px;">` : ''}
+                            ${channelData.imageUrl ? 
+                                `<img src="${channelData.imageUrl}" 
+                                      style="max-width: 150px; border-radius: 6px; border: 1px solid var(--border);"
+                                      onerror="this.style.display='none';">` : 
+                                ''}
                         </div>
                     </div>
                 </form>
@@ -1297,22 +1632,36 @@
             openModal('addSeriesModal');
         }
 
+        function editSeries(seriesId, seriesData) {
+            // تحويل البيانات مرة أخرى إذا لزم الأمر
+            const decodedData = typeof seriesData === 'string' ? 
+                JSON.parse(seriesData.replace(/&quot;/g, '"').replace(/&#39;/g, "'")) : 
+                seriesData;
+            
+            showEditSeriesModal(seriesId, decodedData);
+        }
+
         function showEditSeriesModal(seriesId, seriesData) {
-            // إصلاح: استخدام JSON.stringify بشكل صحيح
-            const safeSeriesData = JSON.stringify(seriesData).replace(/'/g, "&#39;");
+            // تنظيف البيانات من أي أحرف خاصة
+            const cleanName = (seriesData.name || '').replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+            const cleanImageUrl = (seriesData.imageUrl || '').replace(/"/g, '&quot;').replace(/'/g, '&#39;');
             
             const content = `
                 <form id="editSeriesForm">
                     <div class="form-group">
                         <label class="form-label">اسم المسلسل *</label>
-                        <input type="text" class="form-control" id="editSeriesName" value="${seriesData.name}" required>
+                        <input type="text" class="form-control" id="editSeriesName" value="${cleanName}" required>
                     </div>
                     
                     <div class="form-group">
                         <label class="form-label">رابط الصورة</label>
-                        <input type="url" class="form-control" id="editSeriesImageUrl" value="${seriesData.imageUrl || ''}">
+                        <input type="url" class="form-control" id="editSeriesImageUrl" value="${cleanImageUrl}">
                         <div class="image-preview" id="editSeriesImagePreview">
-                            ${seriesData.imageUrl ? `<img src="${seriesData.imageUrl}" style="max-width: 150px;">` : ''}
+                            ${seriesData.imageUrl ? 
+                                `<img src="${seriesData.imageUrl}" 
+                                      style="max-width: 150px; border-radius: 6px; border: 1px solid var(--border);"
+                                      onerror="this.style.display='none';">` : 
+                                ''}
                         </div>
                     </div>
                 </form>
@@ -1404,7 +1753,10 @@
         // Episode Functions
         function showEpisodesModal(seriesId, seriesName) {
             currentSeriesId = seriesId;
-            currentSeriesName = seriesName;
+            
+            // تنظيف اسم المسلسل
+            const decodedSeriesName = seriesName.replace(/&#39;/g, "'").replace(/&quot;/g, '"');
+            currentSeriesName = decodedSeriesName;
             
             // Calculate next episode number
             database.ref(`series/${seriesId}/episodes`).once('value', (snapshot) => {
@@ -1421,7 +1773,7 @@
             const content = `
                 <div>
                     <h4 style="margin-bottom: 15px; color: var(--dark); font-size: 16px;">
-                        <i class="fas fa-film"></i> ${seriesName}
+                        <i class="fas fa-film"></i> ${decodedSeriesName}
                     </h4>
                     
                     <div id="episodesAlert"></div>
@@ -1532,6 +1884,9 @@
                 
                 let html = '';
                 episodesArray.forEach((episode, index) => {
+                    const safeEpisodeName = episode.name.replace(/'/g, "\\'").replace(/"/g, '&quot;');
+                    const safeEpisodeUrl = episode.url.replace(/'/g, "\\'").replace(/"/g, '&quot;');
+                    
                     html += `
                         <div class="episode-item">
                             <div class="episode-info">
@@ -1539,6 +1894,9 @@
                                 <p>${episode.url}</p>
                             </div>
                             <div class="actions">
+                                <button class="btn btn-warning btn-sm" onclick="showEditEpisodeModal('${seriesId}', '${episode.id}', '${safeEpisodeName}', '${safeEpisodeUrl}')">
+                                    <i class="fas fa-edit"></i> تعديل
+                                </button>
                                 <button class="btn btn-danger btn-sm" onclick="deleteEpisode('${seriesId}', '${episode.id}')">
                                     <i class="fas fa-trash"></i> حذف
                                 </button>
@@ -1549,6 +1907,58 @@
                 
                 episodesContainer.innerHTML = html;
             });
+        }
+
+        function showEditEpisodeModal(seriesId, episodeId, episodeName, episodeUrl) {
+            const content = `
+                <form id="editEpisodeForm">
+                    <div class="form-group">
+                        <label class="form-label">اسم الحلقة *</label>
+                        <input type="text" class="form-control" id="editEpisodeName" value="${episodeName}" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">رابط الحلقة *</label>
+                        <input type="url" class="form-control" id="editEpisodeUrl" value="${episodeUrl}" required>
+                    </div>
+                </form>
+            `;
+            
+            const footer = `
+                <button type="button" class="btn" onclick="closeModal('editEpisodeModal')">إلغاء</button>
+                <button type="button" class="btn btn-primary" onclick="updateEpisode('${seriesId}', '${episodeId}')">تحديث الحلقة</button>
+            `;
+            
+            createModal('editEpisodeModal', '<i class="fas fa-edit"></i> تعديل الحلقة', content, footer);
+            openModal('editEpisodeModal');
+        }
+
+        async function updateEpisode(seriesId, episodeId) {
+            const name = document.getElementById('editEpisodeName')?.value.trim();
+            const url = document.getElementById('editEpisodeUrl')?.value.trim();
+            
+            if (!name || !url) {
+                showAlert('episodesAlert', 'يرجى ملء جميع الحقول المطلوبة', 'error');
+                return;
+            }
+            
+            showLoading();
+            
+            try {
+                await database.ref(`series/${seriesId}/episodes/${episodeId}`).update({
+                    name: name,
+                    url: url,
+                    updatedAt: Date.now()
+                });
+                
+                showAlert('episodesAlert', 'تم تحديث الحلقة بنجاح!', 'success');
+                closeModal('editEpisodeModal');
+                loadEpisodes(seriesId);
+            } catch (error) {
+                showAlert('episodesAlert', 'حدث خطأ: ' + error.message, 'error');
+            }
+            
+            hideLoading();
         }
 
         async function deleteEpisode(seriesId, episodeId) {
@@ -1593,27 +2003,37 @@
                 
                 let html = '';
                 Object.entries(channels).forEach(([id, channel]) => {
-                    // إصلاح: استخدام JSON.stringify بشكل صحيح
-                    const safeChannel = JSON.stringify(channel).replace(/'/g, "&#39;");
+                    // تحويل البيانات إلى JSON بشكل آمن
+                    const channelData = {
+                        name: channel.name || '',
+                        url: channel.url || '',
+                        imageUrl: channel.imageUrl || ''
+                    };
+                    
+                    // استبدال جميع علامات الاقتباس لتفادي المشاكل
+                    const safeChannelData = JSON.stringify(channelData)
+                        .replace(/"/g, '&quot;')
+                        .replace(/'/g, '&#39;')
+                        .replace(/\\/g, '\\\\');
                     
                     html += `
                         <tr>
                             <td>
                                 ${channel.imageUrl ? 
                                     `<img src="${channel.imageUrl}" class="item-image" alt="${channel.name}" 
-                                         onerror="this.onerror=null; this.parentElement.innerHTML='<div class=\\'no-image\\'><i class=\\'fas fa-tv\\'></i></div>'">` : 
+                                         onerror="this.style.display='none'; this.parentElement.innerHTML='<div class=\\'no-image\\'><i class=\\'fas fa-tv\\'></i></div>';">` : 
                                     `<div class="no-image"><i class="fas fa-tv"></i></div>`
                                 }
                             </td>
                             <td>
-                                <div class="item-name">${channel.name}</div>
+                                <div class="item-name">${channel.name || 'بدون اسم'}</div>
                             </td>
                             <td>
-                                <div class="item-url">${channel.url}</div>
+                                <div class="item-url">${channel.url || 'بدون رابط'}</div>
                             </td>
                             <td>
                                 <div class="actions">
-                                    <button class="btn btn-warning btn-sm" onclick="showEditChannelModal('${id}', ${safeChannel})">
+                                    <button class="btn btn-warning btn-sm" onclick="editChannel('${id}', ${safeChannelData})">
                                         <i class="fas fa-edit"></i> تعديل
                                     </button>
                                     <button class="btn btn-danger btn-sm" onclick="deleteChannel('${id}')">
@@ -1663,30 +2083,43 @@
                 let html = '';
                 Object.entries(series).forEach(([id, show]) => {
                     const episodeCount = show.episodes ? Object.keys(show.episodes).length : 0;
-                    // إصلاح: استخدام JSON.stringify بشكل صحيح
-                    const safeShow = JSON.stringify(show).replace(/'/g, "&#39;");
+                    
+                    // تحويل البيانات إلى JSON بشكل آمن
+                    const seriesData = {
+                        name: show.name || '',
+                        imageUrl: show.imageUrl || ''
+                    };
+                    
+                    // استبدال جميع علامات الاقتباس لتفادي المشاكل
+                    const safeSeriesData = JSON.stringify(seriesData)
+                        .replace(/"/g, '&quot;')
+                        .replace(/'/g, '&#39;')
+                        .replace(/\\/g, '\\\\');
+                    
+                    // تنظيف اسم المسلسل للاستخدام في دالة showEpisodesModal
+                    const safeSeriesName = (show.name || '').replace(/'/g, '&#39;').replace(/"/g, '&quot;');
                     
                     html += `
                         <tr>
                             <td>
                                 ${show.imageUrl ? 
-                                    `<img src="${show.imageUrl}" class="item-image" alt="${show.name}"
-                                         onerror="this.onerror=null; this.parentElement.innerHTML='<div class=\\'no-image\\'><i class=\\'fas fa-film\\'></i></div>'">` : 
+                                    `<img src="${show.imageUrl}" class="item-image" alt="${show.name}" 
+                                         onerror="this.style.display='none'; this.parentElement.innerHTML='<div class=\\'no-image\\'><i class=\\'fas fa-film\\'></i></div>';">` : 
                                     `<div class="no-image"><i class="fas fa-film"></i></div>`
                                 }
                             </td>
                             <td>
-                                <div class="item-name">${show.name}</div>
+                                <div class="item-name">${show.name || 'بدون اسم'}</div>
                             </td>
                             <td>
                                 <div>${episodeCount} حلقة</div>
                             </td>
                             <td>
                                 <div class="actions">
-                                    <button class="btn btn-success btn-sm" onclick="showEpisodesModal('${id}', '${show.name.replace(/'/g, "&#39;")}')">
+                                    <button class="btn btn-success btn-sm" onclick="showEpisodesModal('${id}', '${safeSeriesName}')">
                                         <i class="fas fa-play-circle"></i> إدارة الحلقات
                                     </button>
-                                    <button class="btn btn-warning btn-sm" onclick="showEditSeriesModal('${id}', ${safeShow})">
+                                    <button class="btn btn-warning btn-sm" onclick="editSeries('${id}', ${safeSeriesData})">
                                         <i class="fas fa-edit"></i> تعديل
                                     </button>
                                     <button class="btn btn-danger btn-sm" onclick="deleteSeries('${id}')">
@@ -1702,9 +2135,65 @@
             });
         }
 
+        function loadEpisodesSection() {
+            const episodesSeriesList = document.getElementById('episodesSeriesList');
+            
+            database.ref('series').on('value', (snapshot) => {
+                const series = snapshot.val();
+                
+                if (!series) {
+                    episodesSeriesList.innerHTML = `
+                        <tr>
+                            <td colspan="4" class="empty-state">
+                                <i class="fas fa-film"></i>
+                                <p>لا توجد مسلسلات مضافة</p>
+                            </td>
+                        </tr>
+                    `;
+                    return;
+                }
+                
+                let html = '';
+                Object.entries(series).forEach(([id, show]) => {
+                    const episodeCount = show.episodes ? Object.keys(show.episodes).length : 0;
+                    
+                    // تنظيف اسم المسلسل للاستخدام في دالة showEpisodesModal
+                    const safeSeriesName = (show.name || '').replace(/'/g, '&#39;').replace(/"/g, '&quot;');
+                    
+                    html += `
+                        <tr>
+                            <td>
+                                ${show.imageUrl ? 
+                                    `<img src="${show.imageUrl}" class="item-image" alt="${show.name}" 
+                                         onerror="this.style.display='none'; this.parentElement.innerHTML='<div class=\\'no-image\\'><i class=\\'fas fa-film\\'></i></div>';">` : 
+                                    `<div class="no-image"><i class="fas fa-film"></i></div>`
+                                }
+                            </td>
+                            <td>
+                                <div class="item-name">${show.name || 'بدون اسم'}</div>
+                            </td>
+                            <td>
+                                <div>${episodeCount} حلقة</div>
+                            </td>
+                            <td>
+                                <div class="actions">
+                                    <button class="btn btn-success btn-sm" onclick="showEpisodesModal('${id}', '${safeSeriesName}')">
+                                        <i class="fas fa-play-circle"></i> إدارة الحلقات
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                    `;
+                });
+                
+                episodesSeriesList.innerHTML = html;
+            });
+        }
+
         function refreshData() {
             loadChannels();
             loadSeries();
+            loadEpisodesSection();
             showAlert('channelsAlert', 'تم تحديث البيانات بنجاح!', 'success');
         }
 
@@ -1712,6 +2201,7 @@
         document.addEventListener('DOMContentLoaded', () => {
             loadChannels();
             loadSeries();
+            loadEpisodesSection();
             showSection('dashboard');
         });
     </script>
