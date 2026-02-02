@@ -147,19 +147,6 @@
             box-shadow: 0 4px 12px rgba(37, 99, 235, 0.2);
         }
         
-        .btn-google {
-            background: white;
-            color: #334155;
-            border: 1px solid var(--border);
-            margin-top: 15px;
-        }
-        
-        .btn-google:hover {
-            background: #f8fafc;
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-        }
-        
         .login-footer {
             text-align: center;
             margin-top: 25px;
@@ -256,17 +243,29 @@
             <!-- Alert Messages -->
             <div id="loginAlert"></div>
             
-            <!-- Google Login Button -->
-            <button class="btn btn-google" id="googleLoginBtn">
-                <i class="fab fa-google"></i>
-                تسجيل الدخول بحساب جيميل
-            </button>
+            <!-- Email/Password Login Form -->
+            <form id="loginForm">
+                <div class="form-group">
+                    <label class="form-label" for="email">البريد الإلكتروني</label>
+                    <input type="email" class="form-control" id="email" required placeholder="admin@gnralplayer.com">
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label" for="password">كلمة المرور</label>
+                    <input type="password" class="form-control" id="password" required placeholder="********">
+                </div>
+                
+                <button type="submit" class="btn btn-primary">
+                    <i class="fas fa-sign-in-alt"></i>
+                    تسجيل الدخول
+                </button>
+            </form>
             
-            <!-- Only Admin Email Info -->
+            <!-- Admin Only Info -->
             <div style="margin-top: 20px; padding: 15px; background: #f8fafc; border-radius: 8px; text-align: center;">
                 <i class="fas fa-info-circle" style="color: var(--primary); margin-bottom: 8px; font-size: 18px;"></i>
                 <p style="font-size: 12px; color: var(--gray); line-height: 1.5;">
-                    <strong>ملاحظة:</strong> يسمح فقط بحساب جيميل واحد للوصول إلى لوحة التحكم
+                    <strong>ملاحظة:</strong> يسمح فقط بالبريد الإلكتروني وكلمة المرور المحددين مسبقًا
                 </p>
             </div>
             
@@ -277,7 +276,7 @@
     </div>
     
     <script>
-        // Firebase Configuration (نفس الإعدادات)
+        // Firebase Configuration
         const firebaseConfig = {
             apiKey: "AIzaSyBGCYbfgwhzqVVgAm0jB6iz3wxKH1UggBI",
             authDomain: "gnralplayer-861a9.firebaseapp.com",
@@ -292,9 +291,6 @@
         // Initialize Firebase
         firebase.initializeApp(firebaseConfig);
         const auth = firebase.auth();
-
-        // البريد الإلكتروني المسموح به فقط (يمكنك تغييره هنا)
-        const ALLOWED_EMAIL = "gnralplayer@gmail.com"; // ضع هنا بريد الجيميل المسموح به فقط
 
         // UI Functions
         function showLoading() {
@@ -322,45 +318,42 @@
             }, 5000);
         }
 
-        // Google Sign-In Function
-        function signInWithGoogle() {
+        // Email/Password Sign-In Function
+        function signInWithEmailPassword(email, password) {
             showLoading();
             
-            const provider = new firebase.auth.GoogleAuthProvider();
-            
-            auth.signInWithPopup(provider)
+            // محاولة تسجيل الدخول باستخدام Firebase فقط
+            auth.signInWithEmailAndPassword(email, password)
                 .then((result) => {
                     const user = result.user;
                     
-                    // التحقق من البريد الإلكتروني المسموح به فقط
-                    if (user.email === ALLOWED_EMAIL) {
-                        showAlert('تم تسجيل الدخول بنجاح! يتم تحويلك إلى لوحة التحكم...', 'success');
-                        
-                        // حفظ حالة تسجيل الدخول في localStorage
-                        localStorage.setItem('gnralplayer_admin_logged_in', 'true');
-                        localStorage.setItem('gnralplayer_admin_email', user.email);
-                        
-                        // الانتقال إلى لوحة التحكم بعد تأخير قصير
-                        setTimeout(() => {
-                            window.location.href = 'index.html';
-                        }, 1500);
-                    } else {
-                        // إذا كان البريد غير مسموح به، نقوم بتسجيل الخروج وإظهار رسالة خطأ
-                        auth.signOut();
-                        showAlert('غير مصرح لك بالوصول. فقط حساب معين يمكنه الدخول.', 'error');
-                        hideLoading();
-                    }
+                    showAlert('تم تسجيل الدخول بنجاح! يتم تحويلك إلى لوحة التحكم...', 'success');
+                    
+                    // حفظ حالة تسجيل الدخول في localStorage
+                    localStorage.setItem('gnralplayer_admin_logged_in', 'true');
+                    localStorage.setItem('gnralplayer_admin_email', user.email);
+                    
+                    // الانتقال إلى لوحة التحكم بعد تأخير قصير
+                    setTimeout(() => {
+                        window.location.href = 'index.html';
+                    }, 1500);
                 })
                 .catch((error) => {
                     hideLoading();
                     
                     let errorMessage = 'حدث خطأ أثناء تسجيل الدخول';
-                    if (error.code === 'auth/popup-closed-by-user') {
-                        errorMessage = 'تم إغلاق نافذة تسجيل الدخول';
-                    } else if (error.code === 'auth/network-request-failed') {
-                        errorMessage = 'خطأ في الاتصال بالشبكة';
-                    } else {
-                        errorMessage = error.message;
+                    
+                    // رسائل خطأ محددة
+                    if (error.code === 'auth/invalid-email') {
+                        errorMessage = 'البريد الإلكتروني غير صالح';
+                    } else if (error.code === 'auth/user-disabled') {
+                        errorMessage = 'هذا الحساب معطل';
+                    } else if (error.code === 'auth/user-not-found') {
+                        errorMessage = 'لا يوجد حساب بهذا البريد الإلكتروني';
+                    } else if (error.code === 'auth/wrong-password') {
+                        errorMessage = 'كلمة المرور غير صحيحة';
+                    } else if (error.code === 'auth/too-many-requests') {
+                        errorMessage = 'تم تجاوز عدد المحاولات المسموح بها. حاول لاحقاً';
                     }
                     
                     showAlert(errorMessage, 'error');
@@ -371,20 +364,28 @@
         function checkAuthState() {
             auth.onAuthStateChanged((user) => {
                 if (user) {
-                    // التحقق من البريد الإلكتروني المسموح به
-                    if (user.email === ALLOWED_EMAIL) {
-                        // الانتقال إلى لوحة التحكم
-                        window.location.href = 'index.html';
-                    } else {
-                        // تسجيل الخروج إذا كان البريد غير مسموح به
-                        auth.signOut();
-                    }
+                    // إذا كان المستخدم مسجل دخول، الانتقال إلى لوحة التحكم
+                    localStorage.setItem('gnralplayer_admin_logged_in', 'true');
+                    localStorage.setItem('gnralplayer_admin_email', user.email);
+                    window.location.href = 'index.html';
                 }
             });
         }
 
         // Event Listeners
-        document.getElementById('googleLoginBtn').addEventListener('click', signInWithGoogle);
+        document.getElementById('loginForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const email = document.getElementById('email').value.trim();
+            const password = document.getElementById('password').value;
+            
+            if (!email || !password) {
+                showAlert('يرجى ملء جميع الحقول', 'error');
+                return;
+            }
+            
+            signInWithEmailPassword(email, password);
+        });
 
         // Initialize
         document.addEventListener('DOMContentLoaded', () => {
