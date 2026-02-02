@@ -3,14 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>لوحة التحكم - GENRAL PRO</title>
+    <title>لوحة التحكم - GNRALPLAYER</title>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     
-    <!-- Firebase SDK -->
-    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
-    
+<!-- Firebase SDK -->
+<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
+
     <style>
         :root {
             --primary: #2563eb;
@@ -1075,7 +1076,7 @@
     <!-- Sidebar for Desktop -->
     <aside class="sidebar">
         <div class="sidebar-header">
-            <h2>GENRAL PRO</h2>
+            <h2>GNRALPLAYER</h2>
         </div>
         <nav class="sidebar-nav">
             <div class="nav-item active" onclick="showSection('dashboard')">
@@ -1303,6 +1304,59 @@
     <div id="modalsContainer"></div>
     
     <script>
+    	// التحقق من تسجيل الدخول
+function checkLogin() {
+    const isLoggedIn = localStorage.getItem('gnralplayer_admin_logged_in');
+    const adminEmail = localStorage.getItem('gnralplayer_admin_email');
+    
+    if (!isLoggedIn || !adminEmail) {
+        // إذا لم يكن مسجلاً، نعيد توجيهه إلى صفحة تسجيل الدخول
+        window.location.href = 'login.html';
+        return false;
+    }
+    
+    // يمكننا أيضًا التحقق من البريد الإلكتروني هنا
+    const ALLOWED_EMAIL = "gnralplayer@gmail.com"; // نفس البريد المحدد في login.html
+    
+    if (adminEmail !== ALLOWED_EMAIL) {
+        // إذا كان البريد غير صحيح، نعيد التوجيه
+        localStorage.removeItem('gnralplayer_admin_logged_in');
+        localStorage.removeItem('gnralplayer_admin_email');
+        window.location.href = 'login.html';
+        return false;
+    }
+    
+    return true;
+}
+
+// دالة تسجيل الخروج
+function logout() {
+    firebase.auth().signOut().then(() => {
+        // حذف بيانات تسجيل الدخول من localStorage
+        localStorage.removeItem('gnralplayer_admin_logged_in');
+        localStorage.removeItem('gnralplayer_admin_email');
+        
+        // الانتقال إلى صفحة تسجيل الدخول
+        window.location.href = 'login.html';
+    }).catch((error) => {
+        console.error('خطأ في تسجيل الخروج:', error);
+    });
+}
+
+// إضافة زر تسجيل الخروج في الـ Top Bar
+function addLogoutButton() {
+    const topBarRight = document.querySelector('.top-bar-left');
+    if (topBarRight) {
+        const logoutBtn = document.createElement('button');
+        logoutBtn.className = 'btn btn-danger';
+        logoutBtn.style.marginLeft = '10px';
+        logoutBtn.innerHTML = '<i class="fas fa-sign-out-alt"></i> تسجيل الخروج';
+        logoutBtn.onclick = logout;
+        
+        topBarRight.appendChild(logoutBtn);
+    }
+}
+    
         // Firebase Configuration
         const firebaseConfig = {
             apiKey: "AIzaSyBGCYbfgwhzqVVgAm0jB6iz3wxKH1UggBI",
@@ -2198,7 +2252,13 @@
         }
 
         // Initialize
-        document.addEventListener('DOMContentLoaded', () => {
+        document.addEventListener('DOMContentLoaded', () => {// التحقق من تسجيل الدخول أولاً
+if (!checkLogin()) {
+    return;
+}
+
+// إضافة زر تسجيل الخروج
+addLogoutButton();
             loadChannels();
             loadSeries();
             loadEpisodesSection();

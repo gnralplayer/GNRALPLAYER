@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>تسجيل الدخول - GNRALPLAYER</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+    
+    <style>
+        :root {
+            --primary: #2563eb;
+            --primary-dark: #1d4ed8;
+            --secondary: #7c3aed;
+            --success: #10b981;
+            --danger: #ef4444;
+            --warning: #f59e0b;
+            --dark: #1e293b;
+            --light: #f8fafc;
+            --gray: #64748b;
+            --border: #e2e8f0;
+            --sidebar-bg: #0f172a;
+            --card-bg: #ffffff;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Cairo', sans-serif;
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+            color: #334155;
+            line-height: 1.6;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        
+        .login-container {
+            width: 100%;
+            max-width: 420px;
+        }
+        
+        .login-card {
+            background: white;
+            border-radius: 16px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            animation: fadeIn 0.6s ease;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .login-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .login-logo {
+            font-size: 28px;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+        
+        .login-title {
+            font-size: 20px;
+            font-weight: 600;
+            color: var(--dark);
+            margin-bottom: 5px;
+        }
+        
+        .login-subtitle {
+            font-size: 14px;
+            color: var(--gray);
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: var(--dark);
+            font-size: 14px;
+        }
+        
+        .form-control {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            font-size: 14px;
+            font-family: 'Cairo', sans-serif;
+            transition: all 0.3s ease;
+        }
+        
+        .form-control:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+        }
+        
+        .btn {
+            width: 100%;
+            padding: 12px;
+            border-radius: 8px;
+            border: none;
+            font-family: 'Cairo', sans-serif;
+            font-weight: 600;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 10px;
+        }
+        
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background: var(--primary-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(37, 99, 235, 0.2);
+        }
+        
+        .btn-google {
+            background: white;
+            color: #334155;
+            border: 1px solid var(--border);
+            margin-top: 15px;
+        }
+        
+        .btn-google:hover {
+            background: #f8fafc;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+        
+        .login-footer {
+            text-align: center;
+            margin-top: 25px;
+            padding-top: 20px;
+            border-top: 1px solid var(--border);
+            font-size: 13px;
+            color: var(--gray);
+        }
+        
+        .alert {
+            padding: 12px 15px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 13px;
+        }
+        
+        .alert-success {
+            background: #d1fae5;
+            color: #065f46;
+            border: 1px solid #a7f3d0;
+        }
+        
+        .alert-error {
+            background: #fee2e2;
+            color: #991b1b;
+            border: 1px solid #fecaca;
+        }
+        
+        .loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.7);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+        }
+        
+        .loading-overlay.active {
+            display: flex;
+        }
+        
+        .loading-spinner {
+            width: 40px;
+            height: 40px;
+            border: 3px solid rgba(255, 255, 255, 0.3);
+            border-top-color: white;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        
+        @media (max-width: 480px) {
+            .login-card {
+                padding: 20px;
+            }
+            
+            .login-logo {
+                font-size: 24px;
+            }
+            
+            .login-title {
+                font-size: 18px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Loading Overlay -->
+    <div class="loading-overlay" id="loadingOverlay">
+        <div class="loading-spinner"></div>
+    </div>
+    
+    <div class="login-container">
+        <div class="login-card">
+            <div class="login-header">
+                <div class="login-logo">
+                    <i class="fas fa-play-circle"></i>
+                    GNRALPLAYER
+                </div>
+                <h2 class="login-title">تسجيل الدخول</h2>
+                <p class="login-subtitle">الرجاء تسجيل الدخول للوصول إلى لوحة التحكم</p>
+            </div>
+            
+            <!-- Alert Messages -->
+            <div id="loginAlert"></div>
+            
+            <!-- Google Login Button -->
+            <button class="btn btn-google" id="googleLoginBtn">
+                <i class="fab fa-google"></i>
+                تسجيل الدخول بحساب جيميل
+            </button>
+            
+            <!-- Only Admin Email Info -->
+            <div style="margin-top: 20px; padding: 15px; background: #f8fafc; border-radius: 8px; text-align: center;">
+                <i class="fas fa-info-circle" style="color: var(--primary); margin-bottom: 8px; font-size: 18px;"></i>
+                <p style="font-size: 12px; color: var(--gray); line-height: 1.5;">
+                    <strong>ملاحظة:</strong> يسمح فقط بحساب جيميل واحد للوصول إلى لوحة التحكم
+                </p>
+            </div>
+            
+            <div class="login-footer">
+                <p>لوحة تحكم GNRALPLAYER &copy; 2026</p>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // Firebase Configuration (نفس الإعدادات)
+        const firebaseConfig = {
+            apiKey: "AIzaSyBGCYbfgwhzqVVgAm0jB6iz3wxKH1UggBI",
+            authDomain: "gnralplayer-861a9.firebaseapp.com",
+            databaseURL: "https://gnralplayer-861a9-default-rtdb.firebaseio.com",
+            projectId: "gnralplayer-861a9",
+            storageBucket: "gnralplayer-861a9.firebasestorage.app",
+            messagingSenderId: "185880930277",
+            appId: "1:185880930277:web:4e760e06a732361e1d310c",
+            measurementId: "G-M7ZQFWMLNP"
+        };
+
+        // Initialize Firebase
+        firebase.initializeApp(firebaseConfig);
+        const auth = firebase.auth();
+
+        // البريد الإلكتروني المسموح به فقط (يمكنك تغييره هنا)
+        const ALLOWED_EMAIL = "gnralplayer@gmail.com"; // ضع هنا بريد الجيميل المسموح به فقط
+
+        // UI Functions
+        function showLoading() {
+            document.getElementById('loadingOverlay').classList.add('active');
+        }
+
+        function hideLoading() {
+            document.getElementById('loadingOverlay').classList.remove('active');
+        }
+
+        function showAlert(message, type) {
+            const alertDiv = document.getElementById('loginAlert');
+            const alertClass = type === 'success' ? 'alert-success' : 'alert-error';
+            const icon = type === 'success' ? 'fa-check-circle' : 'fa-exclamation-circle';
+            
+            alertDiv.innerHTML = `
+                <div class="alert ${alertClass}">
+                    <i class="fas ${icon}"></i>
+                    ${message}
+                </div>
+            `;
+            
+            setTimeout(() => {
+                alertDiv.innerHTML = '';
+            }, 5000);
+        }
+
+        // Google Sign-In Function
+        function signInWithGoogle() {
+            showLoading();
+            
+            const provider = new firebase.auth.GoogleAuthProvider();
+            
+            auth.signInWithPopup(provider)
+                .then((result) => {
+                    const user = result.user;
+                    
+                    // التحقق من البريد الإلكتروني المسموح به فقط
+                    if (user.email === ALLOWED_EMAIL) {
+                        showAlert('تم تسجيل الدخول بنجاح! يتم تحويلك إلى لوحة التحكم...', 'success');
+                        
+                        // حفظ حالة تسجيل الدخول في localStorage
+                        localStorage.setItem('gnralplayer_admin_logged_in', 'true');
+                        localStorage.setItem('gnralplayer_admin_email', user.email);
+                        
+                        // الانتقال إلى لوحة التحكم بعد تأخير قصير
+                        setTimeout(() => {
+                            window.location.href = 'index.html';
+                        }, 1500);
+                    } else {
+                        // إذا كان البريد غير مسموح به، نقوم بتسجيل الخروج وإظهار رسالة خطأ
+                        auth.signOut();
+                        showAlert('غير مصرح لك بالوصول. فقط حساب معين يمكنه الدخول.', 'error');
+                        hideLoading();
+                    }
+                })
+                .catch((error) => {
+                    hideLoading();
+                    
+                    let errorMessage = 'حدث خطأ أثناء تسجيل الدخول';
+                    if (error.code === 'auth/popup-closed-by-user') {
+                        errorMessage = 'تم إغلاق نافذة تسجيل الدخول';
+                    } else if (error.code === 'auth/network-request-failed') {
+                        errorMessage = 'خطأ في الاتصال بالشبكة';
+                    } else {
+                        errorMessage = error.message;
+                    }
+                    
+                    showAlert(errorMessage, 'error');
+                });
+        }
+
+        // Check if user is already logged in
+        function checkAuthState() {
+            auth.onAuthStateChanged((user) => {
+                if (user) {
+                    // التحقق من البريد الإلكتروني المسموح به
+                    if (user.email === ALLOWED_EMAIL) {
+                        // الانتقال إلى لوحة التحكم
+                        window.location.href = 'index.html';
+                    } else {
+                        // تسجيل الخروج إذا كان البريد غير مسموح به
+                        auth.signOut();
+                    }
+                }
+            });
+        }
+
+        // Event Listeners
+        document.getElementById('googleLoginBtn').addEventListener('click', signInWithGoogle);
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', () => {
+            checkAuthState();
+        });
+    </script>
+</body>
+</html>
